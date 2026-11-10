@@ -47,6 +47,22 @@ function renderProjects(projects, container) {
   }
 }
 
+// Cursor-following glow: sets --mx/--my (px, relative to the hovered card); CSS paints the highlight.
+// No-op under reduced motion; ignores touch/pen pointers.
+function initCardGlow(container) {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  container.addEventListener("pointermove", (event) => {
+    if (event.pointerType !== "mouse") return;
+    const card = event.target.closest(".card");
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    card.style.setProperty("--mx", `${event.clientX - rect.left}px`);
+    card.style.setProperty("--my", `${event.clientY - rect.top}px`);
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  renderProjects(PROJECTS, document.getElementById("project-grid"));
+  const grid = document.getElementById("project-grid");
+  renderProjects(PROJECTS, grid);
+  initCardGlow(grid);
 });
