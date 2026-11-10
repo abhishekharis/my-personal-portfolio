@@ -1,0 +1,197 @@
+<!doctype html>
+<!--
+  PROTOTYPE - THROWAWAY VISUAL MOCKUP. Not production code.
+  Mirrors docs/superpowers/specs/2026-11-09-portfolio-mvp-design.md and
+  docs/superpowers/plans/2026-11-09-portfolio-mvp.md so the design can be reviewed before the real build.
+  Data is inlined here on purpose; the real build uses projects.js + script.js.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abhishek Haris — Full Stack Engineer</title>
+<meta name="description" content="Portfolio of Abhishek Haris, Full Stack Engineer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --text: #ececf4;
+    --muted: #a3a3b8;
+    --glass: rgba(255,255,255,.045);
+    --border: rgba(255,255,255,.12);
+    --violet: #8b5cf6;
+    --cyan: #22d3ee;
+    --emerald: #34d399;
+    --sans: "Space Grotesk", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: var(--sans); line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* violet -> cyan glow behind the hero */
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(60rem 36rem at 15% -5%, rgba(139,92,246,.30), transparent 60%),
+      radial-gradient(52rem 32rem at 90% 5%, rgba(34,211,238,.20), transparent 60%);
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  /* HERO */
+  .hero { padding: 112px 0 72px; }
+  .eyebrow { font-family: var(--mono); font-size: .82rem; color: var(--cyan); letter-spacing: .12em; text-transform: uppercase; margin: 0 0 16px; }
+  h1 { font-size: clamp(2.8rem, 8vw, 5.2rem); line-height: 1.02; letter-spacing: -.03em; margin: 0 0 20px; font-weight: 700;
+       background: linear-gradient(100deg, #fff 30%, #c4b5fd 70%, #67e8f9); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .summary { max-width: 46rem; font-size: 1.15rem; color: var(--muted); margin: 0 0 32px; }
+  .links { display: flex; flex-wrap: wrap; gap: 12px; padding: 0; margin: 0; list-style: none; }
+  .links a {
+    display: inline-block; padding: 10px 18px; border-radius: 999px; color: var(--text); text-decoration: none;
+    background: var(--glass); border: 1px solid var(--border); backdrop-filter: blur(10px);
+    font-size: .95rem; transition: transform .2s, border-color .2s, background .2s;
+  }
+  .links a:hover { transform: translateY(-2px); border-color: rgba(255,255,255,.35); background: rgba(255,255,255,.09); }
+  a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+  /* PROJECTS */
+  .projects { padding: 24px 0 96px; }
+  h2 { font-size: 1.9rem; letter-spacing: -.02em; margin: 0 0 8px; }
+  .section-sub { color: var(--muted); margin: 0 0 32px; }
+  .grid { display: grid; grid-template-columns: 1fr; gap: 24px; list-style: none; padding: 0; margin: 0; }
+  @media (min-width: 900px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .card {
+    --accent: var(--violet);
+    --mx: 50%; --my: 50%;
+    position: relative; display: flex; flex-direction: column; min-width: 0; overflow: hidden;
+    padding: 28px 24px 24px; border-radius: 20px;
+    background: var(--glass); border: 1px solid var(--border);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .card[data-accent="violet"]  { --accent: var(--violet); }
+  .card[data-accent="cyan"]    { --accent: var(--cyan); }
+  .card[data-accent="emerald"] { --accent: var(--emerald); }
+  .card::before { /* 2px accent top edge */
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .card .glow { /* cursor-following highlight */
+    position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .25s;
+    background: radial-gradient(260px circle at var(--mx) var(--my), color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
+  }
+  .card:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    box-shadow: 0 18px 40px -12px color-mix(in srgb, var(--accent) 40%, transparent); }
+  .card:hover .glow { opacity: 1; }
+  .card > * { position: relative; }
+  .card > .glow { position: absolute; }
+
+  /* FinPilot decorative forecast curve + uncertainty band (aria-hidden, low opacity) */
+  .card[data-accent="emerald"]::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 46%; pointer-events: none; opacity: .15;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 120' preserveAspectRatio='none'><path d='M0 88 C40 80 70 70 105 62 S170 40 210 34 S270 22 300 14 L300 62 C270 70 240 76 210 80 S150 94 105 98 S40 106 0 108 Z' fill='%2334d399' fill-opacity='.55'/><path d='M0 98 C40 90 70 80 105 76 S170 62 210 56 S270 44 300 38' fill='none' stroke='%2334d399' stroke-width='2.5'/></svg>") center/100% 100% no-repeat;
+  }
+
+  .badge {
+    align-self: flex-start; position: absolute !important; top: 18px; right: 18px;
+    font-family: var(--mono); font-size: .7rem; padding: 4px 10px; border-radius: 999px;
+    color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+  }
+  .card h3 { font-size: 1.35rem; line-height: 1.2; margin: 0 0 12px; padding-right: 7.5rem; letter-spacing: -.01em; }
+  .card[data-accent="violet"] h3, .card[data-accent="cyan"] h3 { padding-right: 0; }
+  .card p { margin: 0 0 18px; color: var(--muted); font-size: .98rem; flex: 1; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0 0 18px; }
+  .tags li { font-family: var(--mono); font-size: .74rem; padding: 4px 10px; border-radius: 8px; color: var(--text); background: rgba(255,255,255,.06); border: 1px solid var(--border); }
+  .highlight { font-family: var(--mono); font-size: .85rem; color: var(--accent); padding: 12px 0; border-top: 1px solid var(--border); margin-bottom: 14px; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+  .highlight .arrow { color: var(--accent); opacity: .7; }
+  .card-link { color: var(--text); text-decoration: none; font-weight: 500; font-size: .95rem; align-self: flex-start; border-bottom: 1px solid var(--accent); padding-bottom: 2px; }
+  .card-link:hover { color: var(--accent); }
+
+  footer { border-top: 1px solid var(--border); padding: 28px 0 40px; color: var(--muted); font-size: .9rem; }
+
+  /* load animation (staggered) */
+  @keyframes fadeup { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .hero > *, .projects h2, .section-sub, .card { animation: fadeup .7s ease both; }
+  .hero > :nth-child(2) { animation-delay: .08s; } .hero > :nth-child(3) { animation-delay: .16s; } .hero > :nth-child(4) { animation-delay: .24s; }
+  .card:nth-child(1) { animation-delay: .30s; } .card:nth-child(2) { animation-delay: .40s; } .card:nth-child(3) { animation-delay: .50s; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .card:hover { transform: none; } .card .glow { display: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <p class="eyebrow">Full Stack Engineer</p>
+    <h1>Abhishek Haris</h1>
+    <p class="summary">Computer Science graduate from UT Dallas and Software Engineer Intern at Velocis Technology, building Python connectors for AWS Certificate Manager and HashiCorp Vault. I build full-stack applications with React, FastAPI and MongoDB.</p>
+    <ul class="links">
+      <li><a href="mailto:harisabhishek957@gmail.com">Email</a></li>
+      <li><a href="https://linkedin.com/in/abhishek-haris" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+      <li><a href="https://github.com/abhishekharis" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+    </ul>
+  </header>
+
+  <section class="projects" id="projects">
+    <h2>Projects</h2>
+    <p class="section-sub">Things I've built.</p>
+    <ul class="grid" id="project-grid">
+
+      <li class="card" data-accent="violet">
+        <span class="glow"></span>
+        <h3>AI EvalOps</h3>
+        <p>Catches AI quality regressions before release by scoring endpoint responses against approved baselines across five suites, with an optional LLM judge.</p>
+        <ul class="tags"><li>Python</li><li>FastAPI</li><li>Playwright</li><li>Docker</li><li>GitHub Actions</li></ul>
+        <div class="highlight">500+ tests · 97% coverage</div>
+        <a class="card-link" href="https://github.com/abhishekharis/ai-evalops" target="_blank" rel="noopener noreferrer" aria-label="View project: AI EvalOps">View project →</a>
+      </li>
+
+      <li class="card" data-accent="cyan">
+        <span class="glow"></span>
+        <h3>Intelligent Invoice Processing System</h3>
+        <p>End-to-end invoice workflow: document upload, OCR, validation, human approval and RPA, with audit logs and job tracking.</p>
+        <ul class="tags"><li>React</li><li>FastAPI</li><li>MongoDB</li><li>PaddleOCR</li><li>OpenCV</li></ul>
+        <div class="highlight">OCR → approval → RPA</div>
+        <a class="card-link" href="https://github.com/abhishekharis/document-ai-rpa" target="_blank" rel="noopener noreferrer" aria-label="View project: Intelligent Invoice Processing System">View project →</a>
+      </li>
+
+      <li class="card" data-accent="emerald">
+        <span class="glow"></span>
+        <span class="badge">HackUTD 2026</span>
+        <h3>FinPilot</h3>
+        <p>A prototype AI-powered financial resilience platform built for HackUTD 2026 (PNC Financial Health Navigator): detects financial risk, simulates "what if" scenarios, and recommends actions. Uses synthetic data only.</p>
+        <ul class="tags"><li>Python</li><li>FastAPI</li><li>React</li><li>LightGBM</li><li>Gemini</li></ul>
+        <div class="highlight"><span>Detect</span><span class="arrow">→</span><span>Simulate</span><span class="arrow">→</span><span>Recommend</span></div>
+        <a class="card-link" href="https://github.com/mairesse24/FinPilot" target="_blank" rel="noopener noreferrer" aria-label="View project: FinPilot">View project →</a>
+      </li>
+
+    </ul>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">© 2026 Abhishek Haris</div>
+</footer>
+
+<script>
+  // PROTOTYPE: cursor-following glow (mouse only, skipped under reduced motion)
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    document.getElementById("project-grid").addEventListener("pointermove", (e) => {
+      if (e.pointerType !== "mouse") return;
+      const card = e.target.closest(".card");
+      if (!card) return;
+      const r = card.getBoundingClientRect();
+      card.style.setProperty("--mx", (e.clientX - r.left) + "px");
+      card.style.setProperty("--my", (e.clientY - r.top) + "px");
+    });
+  }
+</script>
+</body>
+</html>
