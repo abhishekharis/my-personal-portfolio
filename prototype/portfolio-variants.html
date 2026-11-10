@@ -1,0 +1,214 @@
+<!doctype html>
+<!--
+  PROTOTYPE - THROWAWAY. Not production code.
+  Question: what should the portfolio layout look like? Three structurally different variants,
+  switchable via ?variant=A|B|C (floating bar at the bottom, or the left/right arrow keys).
+    A  "Card row"          - the layout in the spec/plan (3 glass cards in one row)
+    B  "Sidebar + rows"    - sticky intro on the left, projects as wide horizontal rows
+    C  "Spotlight"         - centered intro, project picker + one large detail panel
+  Shared on purpose: tokens, background glow, and the PROJECTS data. Layouts are NOT shared.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abhishek Haris — Full Stack Engineer (variants)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0a0a0f; --text:#ececf4; --muted:#a3a3b8;
+    --glass:rgba(255,255,255,.045); --border:rgba(255,255,255,.12);
+    --violet:#8b5cf6; --cyan:#22d3ee; --emerald:#34d399;
+    --sans:"Space Grotesk",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+    --curve:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 120' preserveAspectRatio='none'><path d='M0 88 C40 80 70 70 105 62 S170 40 210 34 S270 22 300 14 L300 62 C270 70 240 76 210 80 S150 94 105 98 S40 106 0 108 Z' fill='%2334d399' fill-opacity='.55'/><path d='M0 98 C40 90 70 80 105 76 S170 62 210 56 S270 44 300 38' fill='none' stroke='%2334d399' stroke-width='2.5'/></svg>");
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;padding-bottom:90px}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:radial-gradient(60rem 36rem at 15% -5%,rgba(139,92,246,.30),transparent 60%),radial-gradient(52rem 32rem at 90% 5%,rgba(34,211,238,.20),transparent 60%)}
+  a{color:inherit} a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+  ul{list-style:none;padding:0;margin:0}
+  [data-accent=violet]{--accent:var(--violet)} [data-accent=cyan]{--accent:var(--cyan)} [data-accent=emerald]{--accent:var(--emerald)}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  .eyebrow{font-family:var(--mono);font-size:.82rem;color:var(--cyan);letter-spacing:.12em;text-transform:uppercase;margin:0 0 16px}
+  .name{font-weight:700;letter-spacing:-.03em;line-height:1.02;margin:0 0 20px;background:linear-gradient(100deg,#fff 30%,#c4b5fd 70%,#67e8f9);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .summary{color:var(--muted);margin:0 0 28px}
+  .pills{display:flex;flex-wrap:wrap;gap:12px}
+  .pills a{display:inline-block;padding:10px 18px;border-radius:999px;text-decoration:none;font-size:.95rem;background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(10px);transition:transform .2s,border-color .2s,background .2s}
+  .pills a:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.09)}
+  .tags{display:flex;flex-wrap:wrap;gap:8px}
+  .tags li{font-family:var(--mono);font-size:.74rem;padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid var(--border)}
+  .hl{font-family:var(--mono);font-size:.85rem;color:var(--accent);display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+  .hl .arr{opacity:.7}
+  .badge{font-family:var(--mono);font-size:.7rem;padding:4px 10px;border-radius:999px;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 50%,transparent);background:color-mix(in srgb,var(--accent) 12%,transparent);white-space:nowrap}
+  .go{text-decoration:none;font-weight:500;font-size:.95rem;border-bottom:1px solid var(--accent);padding-bottom:2px;display:inline-block}
+  .go:hover{color:var(--accent)}
+  footer{border-top:1px solid var(--border);padding:28px 0 40px;color:var(--muted);font-size:.9rem}
+  @keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .anim{animation:up .6s ease both}
+
+  /* ---------- Variant A: card row ---------- */
+  .va .hero{padding:112px 0 72px} .va .name{font-size:clamp(2.8rem,8vw,5.2rem)} .va .summary{max-width:46rem;font-size:1.15rem}
+  .va h2{font-size:1.9rem;letter-spacing:-.02em;margin:0 0 32px}
+  .va .grid{display:grid;grid-template-columns:1fr;gap:24px;padding-bottom:96px}
+  @media(min-width:900px){.va .grid{grid-template-columns:repeat(3,1fr)}}
+  .va .card{--mx:50%;--my:50%;position:relative;display:flex;flex-direction:column;min-width:0;overflow:hidden;padding:28px 24px 24px;border-radius:20px;background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(14px);transition:transform .25s,box-shadow .25s,border-color .25s}
+  .va .card::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+  .va .card .glow{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .25s;background:radial-gradient(260px circle at var(--mx) var(--my),color-mix(in srgb,var(--accent) 22%,transparent),transparent 70%)}
+  .va .card:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--accent) 55%,transparent);box-shadow:0 18px 40px -12px color-mix(in srgb,var(--accent) 40%,transparent)}
+  .va .card:hover .glow{opacity:1}
+  .va .card>*{position:relative} .va .card>.glow{position:absolute}
+  .va .card .curve{position:absolute;left:0;right:0;bottom:0;height:46%;opacity:.15;pointer-events:none;background:var(--curve) center/100% 100% no-repeat}
+  .va .card .badge{position:absolute;top:18px;right:18px}
+  .va .card h3{font-size:1.35rem;line-height:1.2;margin:0 0 12px;letter-spacing:-.01em}
+  .va .card[data-accent=emerald] h3{padding-right:7.5rem}
+  .va .card p{margin:0 0 18px;color:var(--muted);font-size:.98rem;flex:1}
+  .va .card .tags{margin-bottom:18px}
+  .va .card .hl{padding:12px 0;border-top:1px solid var(--border);margin-bottom:14px}
+
+  /* ---------- Variant B: sidebar + rows ---------- */
+  .vb .shell{display:grid;grid-template-columns:1fr;gap:40px;padding:64px 0}
+  @media(min-width:960px){.vb .shell{grid-template-columns:340px 1fr;gap:64px;padding:0}.vb aside{position:sticky;top:0;align-self:start;height:100vh;display:flex;flex-direction:column;justify-content:center;padding:48px 0}}
+  .vb .name{font-size:clamp(2.4rem,5vw,3.4rem)} .vb .summary{font-size:1.02rem}
+  .vb h2{font-family:var(--mono);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;margin:0 0 20px}
+  .vb .rows{display:flex;flex-direction:column;gap:0}
+  @media(min-width:960px){.vb main{padding:96px 0}}
+  .vb .row{--mx:50%;--my:50%;position:relative;display:grid;grid-template-columns:1fr;gap:14px;padding:32px 24px;border-top:1px solid var(--border);overflow:hidden;transition:background .25s}
+  @media(min-width:640px){.vb .row{grid-template-columns:56px 1fr;gap:20px}}
+  .vb .row:last-child{border-bottom:1px solid var(--border)}
+  .vb .row::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);transform:scaleY(0);transform-origin:top;transition:transform .3s}
+  .vb .row:hover{background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 10%,transparent),transparent 70%)} .vb .row:hover::before{transform:scaleY(1)}
+  .vb .num{font-family:var(--mono);font-size:1.5rem;color:var(--accent)}
+  .vb .row h3{font-size:1.5rem;line-height:1.2;margin:0 0 8px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;letter-spacing:-.01em}
+  .vb .row p{margin:0 0 14px;color:var(--muted);max-width:44rem}
+  .vb .meta{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;margin-bottom:14px}
+  .vb .row .curve{position:absolute;right:0;bottom:0;width:38%;height:70%;opacity:.12;pointer-events:none;background:var(--curve) center/100% 100% no-repeat}
+
+  /* ---------- Variant C: spotlight ---------- */
+  .vc .hero{text-align:center;padding:96px 0 48px} .vc .name{font-size:clamp(2.8rem,9vw,6rem)} .vc .summary{max-width:40rem;margin:0 auto 28px;font-size:1.12rem} .vc .pills{justify-content:center}
+  .vc .picker{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:0 0 24px}
+  .vc .picker button{font:inherit;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 18px;border-radius:999px;background:var(--glass);border:1px solid var(--border);transition:all .2s}
+  .vc .picker button i{width:9px;height:9px;border-radius:50%;background:var(--accent)}
+  .vc .picker button:hover{color:var(--text)}
+  .vc .picker button[aria-selected=true]{color:var(--text);border-color:color-mix(in srgb,var(--accent) 70%,transparent);background:color-mix(in srgb,var(--accent) 14%,transparent);box-shadow:0 0 24px -6px var(--accent)}
+  .vc .panel{position:relative;overflow:hidden;border-radius:28px;padding:48px 40px;margin-bottom:96px;background:var(--glass);border:1px solid color-mix(in srgb,var(--accent) 40%,var(--border));backdrop-filter:blur(16px);min-height:340px;
+    background-image:radial-gradient(40rem 20rem at 100% 0%,color-mix(in srgb,var(--accent) 22%,transparent),transparent 65%)}
+  @media(max-width:640px){.vc .panel{padding:32px 22px}}
+  .vc .panel .grid2{display:grid;grid-template-columns:1fr;gap:32px;position:relative}
+  @media(min-width:820px){.vc .panel .grid2{grid-template-columns:1.4fr 1fr}}
+  .vc .panel h3{font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.1;margin:0 0 16px;letter-spacing:-.02em;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+  .vc .panel p{color:var(--muted);font-size:1.08rem;margin:0 0 24px}
+  .vc .side{display:flex;flex-direction:column;gap:20px;justify-content:flex-end}
+  .vc .side .lbl{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .vc .side .hl{font-size:1rem}
+  .vc .panel .curve{position:absolute;left:0;right:0;bottom:0;height:40%;opacity:.14;pointer-events:none;background:var(--curve) center/100% 100% no-repeat}
+
+  /* ---------- floating switcher (prototype chrome, not part of the design) ---------- */
+  #switcher{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:99;display:flex;align-items:center;gap:6px;padding:6px;border-radius:999px;background:#fff;color:#111;box-shadow:0 8px 30px rgba(0,0,0,.5);font-family:system-ui,sans-serif;font-size:14px}
+  #switcher button{all:unset;cursor:pointer;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;font-size:18px}
+  #switcher button:hover{background:#eee} #switcher button:focus-visible{outline:2px solid #6d28d9}
+  #switcher span{min-width:190px;text-align:center;font-weight:600;padding:0 6px}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="switcher" role="group" aria-label="Prototype variant switcher">
+  <button id="prev" aria-label="Previous variant">←</button><span id="label"></span><button id="next" aria-label="Next variant">→</button>
+</div>
+
+<script>
+/* PROTOTYPE data: shared across variants (copy matches the spec) */
+const SUMMARY = "Computer Science graduate from UT Dallas and Software Engineer Intern at Velocis Technology, building Python connectors for AWS Certificate Manager and HashiCorp Vault. I build full-stack applications with React, FastAPI and MongoDB.";
+const LINKS = [["Email","mailto:harisabhishek957@gmail.com"],["LinkedIn","https://linkedin.com/in/abhishek-haris"],["GitHub","https://github.com/abhishekharis"]];
+const PROJECTS = [
+  {title:"AI EvalOps",accent:"violet",url:"https://github.com/abhishekharis/ai-evalops",
+   description:"Catches AI quality regressions before release by scoring endpoint responses against approved baselines across five suites, with an optional LLM judge.",
+   tags:["Python","FastAPI","Playwright","Docker","GitHub Actions"],highlight:"500+ tests · 97% coverage"},
+  {title:"Intelligent Invoice Processing System",accent:"cyan",url:"https://github.com/abhishekharis/document-ai-rpa",
+   description:"End-to-end invoice workflow: document upload, OCR, validation, human approval and RPA, with audit logs and job tracking.",
+   tags:["React","FastAPI","MongoDB","PaddleOCR","OpenCV"],highlight:"OCR → approval → RPA"},
+  {title:"FinPilot",accent:"emerald",url:"https://github.com/mairesse24/FinPilot",badge:"HackUTD 2026",flow:["Detect","Simulate","Recommend"],
+   description:"A prototype AI-powered financial resilience platform built for HackUTD 2026 (PNC Financial Health Navigator): detects financial risk, simulates \"what if\" scenarios, and recommends actions. Uses synthetic data only.",
+   tags:["Python","FastAPI","React","LightGBM","Gemini"],highlight:"Detect → Simulate → Recommend"}
+];
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pills = () => `<ul class="pills">${LINKS.map(([t,h]) => `<li><a href="${h}"${h.startsWith("http")?' target="_blank" rel="noopener noreferrer"':""}>${t}</a></li>`).join("")}</ul>`;
+const tags = p => `<ul class="tags">${p.tags.map(t => `<li>${esc(t)}</li>`).join("")}</ul>`;
+const hl = p => `<div class="hl">${p.flow ? p.flow.map((s,i)=>`${i?'<span class="arr">→</span>':""}<span>${s}</span>`).join("") : esc(p.highlight)}</div>`;
+const badge = p => p.badge ? `<span class="badge">${esc(p.badge)}</span>` : "";
+const link = p => `<a class="go" href="${p.url}" target="_blank" rel="noopener noreferrer" aria-label="View project: ${esc(p.title)}">View project →</a>`;
+const curve = p => p.flow ? '<div class="curve" aria-hidden="true"></div>' : "";
+const footer = `<footer><div class="wrap">© 2026 Abhishek Haris</div></footer>`;
+
+/* ---- Variant A: card row (the spec/plan layout) ---- */
+function VariantA() {
+  return `<div class="va"><main class="wrap">
+    <header class="hero"><p class="eyebrow anim">Full Stack Engineer</p><h1 class="name anim">Abhishek Haris</h1>
+      <p class="summary anim">${SUMMARY}</p>${pills()}</header>
+    <section><h2>Projects</h2><ul class="grid" id="grid">
+      ${PROJECTS.map((p,i) => `<li class="card anim" data-accent="${p.accent}" style="animation-delay:${.15*i}s"><span class="glow"></span>${badge(p)}<h3>${esc(p.title)}</h3><p>${esc(p.description)}</p>${tags(p)}${hl(p)}${link(p)}${curve(p)}</li>`).join("")}
+    </ul></section></main>${footer}</div>`;
+}
+/* ---- Variant B: sticky sidebar + horizontal rows ---- */
+function VariantB() {
+  return `<div class="vb"><div class="wrap shell">
+    <aside><p class="eyebrow">Full Stack Engineer</p><h1 class="name">Abhishek Haris</h1><p class="summary">${SUMMARY}</p>${pills()}</aside>
+    <main><h2>Selected projects</h2><ul class="rows">
+      ${PROJECTS.map((p,i) => `<li class="row anim" data-accent="${p.accent}" style="animation-delay:${.12*i}s"><div class="num">0${i+1}</div><div>
+        <h3>${esc(p.title)} ${badge(p)}</h3><p>${esc(p.description)}</p>
+        <div class="meta">${hl(p)}</div>${tags(p)}<p style="margin:14px 0 0">${link(p)}</p></div>${curve(p)}</li>`).join("")}
+    </ul></main></div>${footer}</div>`;
+}
+/* ---- Variant C: centered intro + picker + one big panel ---- */
+let cSel = 0;
+function VariantC() {
+  const p = PROJECTS[cSel];
+  return `<div class="vc"><main class="wrap">
+    <header class="hero"><p class="eyebrow anim">Full Stack Engineer</p><h1 class="name anim">Abhishek Haris</h1><p class="summary anim">${SUMMARY}</p>${pills()}</header>
+    <div class="picker" role="tablist" aria-label="Projects">
+      ${PROJECTS.map((q,i) => `<button role="tab" data-i="${i}" data-accent="${q.accent}" aria-selected="${i===cSel}"><i></i>${esc(q.title.length>24?q.title.split(" ").slice(0,2).join(" ")+"…":q.title)}</button>`).join("")}
+    </div>
+    <section class="panel anim" role="tabpanel" data-accent="${p.accent}"><div class="grid2">
+      <div><h3>${esc(p.title)} ${badge(p)}</h3><p>${esc(p.description)}</p>${link(p)}</div>
+      <div class="side"><div><div class="lbl">Highlight</div>${hl(p)}</div><div><div class="lbl">Built with</div>${tags(p)}</div></div>
+    </div>${curve(p)}</section></main>${footer}</div>`;
+}
+
+/* ---- switcher + routing (?variant=) ---- */
+const VARIANTS = {A:["Card row",VariantA], B:["Sidebar + rows",VariantB], C:["Spotlight",VariantC]};
+const keys = Object.keys(VARIANTS);
+let current = (new URLSearchParams(location.search).get("variant") || "A").toUpperCase();
+if (!VARIANTS[current]) current = "A";
+
+function render() {
+  document.getElementById("app").innerHTML = VARIANTS[current][1]();
+  document.getElementById("label").textContent = `${current} (${VARIANTS[current][0]})`;
+  document.title = `Abhishek Haris — variant ${current}`;
+  // cursor glow (variant A, mouse only)
+  const grid = document.getElementById("grid");
+  if (grid && !matchMedia("(prefers-reduced-motion: reduce)").matches) grid.addEventListener("pointermove", e => {
+    if (e.pointerType !== "mouse") return; const c = e.target.closest(".card"); if (!c) return;
+    const r = c.getBoundingClientRect(); c.style.setProperty("--mx", e.clientX - r.left + "px"); c.style.setProperty("--my", e.clientY - r.top + "px");
+  });
+  // variant C picker
+  document.querySelectorAll(".picker button").forEach(b => b.addEventListener("click", () => { cSel = +b.dataset.i; render(); }));
+}
+function go(step) {
+  current = keys[(keys.indexOf(current) + step + keys.length) % keys.length];
+  const u = new URL(location.href); u.searchParams.set("variant", current); history.replaceState(null, "", u);
+  window.scrollTo(0, 0); render();
+}
+document.getElementById("prev").onclick = () => go(-1);
+document.getElementById("next").onclick = () => go(1);
+addEventListener("keydown", e => {
+  if (e.target.closest("input,textarea,[contenteditable]")) return;
+  if (e.key === "ArrowLeft") go(-1); if (e.key === "ArrowRight") go(1);
+});
+render();
+</script>
+</body>
+</html>
