@@ -47,8 +47,11 @@ test('only FinPilot has badge "HackUTD 2026" and flow ["Detect","Simulate","Reco
 });
 
 test("FinPilot copy makes no unsupported claims", () => {
-  const d = PROJECTS[2].description.toLowerCase();
-  assert.ok(d.includes("prototype"));
-  assert.ok(!d.includes("live demo"));
-  assert.ok(!d.includes("production"));
+  const finpilot = PROJECTS[2];
+  assert.ok(finpilot.description.toLowerCase().includes("prototype"));
+  // every visible string on the card: description, highlight, badge, tags, flow
+  const everything = JSON.stringify(finpilot).toLowerCase();
+  assert.ok(!everything.includes("live demo"));
+  assert.ok(!everything.includes("production"));
+  assert.ok(!/\d+(\.\d+)?\s*%/.test(everything), "no accuracy/percentage claims");
 });

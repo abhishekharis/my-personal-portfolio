@@ -11,7 +11,12 @@ function renderHighlight(project) {
   const row = el("div", "highlight");
   if (project.flow) {
     project.flow.forEach((step, i) => {
-      if (i > 0) row.appendChild(el("span", "arrow", "→"));
+      if (i > 0) {
+        const arrow = el("span", "arrow", "→");
+        arrow.setAttribute("aria-hidden", "true"); // decorative; the sr-only text below speaks the order
+        row.appendChild(arrow);
+        row.appendChild(el("span", "sr-only", " then "));
+      }
       row.appendChild(el("span", "", step));
     });
   } else {
@@ -26,8 +31,10 @@ function renderProjects(projects, container) {
     const card = el("li", "card");
     card.dataset.accent = project.accent;
 
-    if (project.badge) card.appendChild(el("span", "badge", project.badge));
-    card.appendChild(el("h3", "", project.title));
+    const head = el("div", "card-head");
+    head.appendChild(el("h3", "", project.title));
+    if (project.badge) head.appendChild(el("span", "badge", project.badge));
+    card.appendChild(head);
     card.appendChild(el("p", "", project.description));
 
     const tags = el("ul", "tags");
@@ -63,6 +70,17 @@ function initCardGlow(container) {
 
 document.addEventListener("DOMContentLoaded", () => {
   const grid = document.getElementById("project-grid");
+  // If projects.js failed to load, show the same fallback the no-JS visitor gets instead of an empty grid.
+  if (typeof PROJECTS === "undefined") {
+    const msg = el("li", "noscript", "Projects couldn't be loaded. See them on ");
+    const link = el("a", "", "GitHub");
+    link.href = "https://github.com/abhishekharis";
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    msg.append(link, ".");
+    grid.replaceChildren(msg);
+    return;
+  }
   renderProjects(PROJECTS, grid);
   initCardGlow(grid);
 });
