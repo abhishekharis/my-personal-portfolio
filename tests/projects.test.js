@@ -15,8 +15,15 @@ test("urls match the spec", () => {
     [
       "https://github.com/abhishekharis/ai-evalops",
       "https://github.com/abhishekharis/document-ai-rpa",
-      "https://finpilotus.netlify.app/",
+      "https://github.com/mairesse24/FinPilot",
     ]
+  );
+});
+
+test("live site urls: AI EvalOps and FinPilot have one, Invoice Processing does not", () => {
+  assert.deepStrictEqual(
+    PROJECTS.map((p) => p.liveUrl),
+    ["https://ai-evalops.onrender.com/", undefined, "https://finpilotus.netlify.app/"]
   );
 });
 

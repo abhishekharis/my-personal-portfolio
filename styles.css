@@ -158,6 +158,37 @@ h2 { font-size: 1.9rem; letter-spacing: -0.02em; margin: 0 0 8px; }
 /* title row: title + optional badge; wraps the badge under a long title instead of overlapping it */
 .card-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 8px 12px; margin: 0 0 12px; }
 .card h3 { flex: 1 1 10rem; font-size: 1.35rem; line-height: 1.2; margin: 0; letter-spacing: -0.01em; }
+/* Project name linking to the live site: quiet ↗ always visible (touch-friendly);
+   on hover the arrow nudges and an accent underline draws in. */
+.title-link {
+  color: inherit;
+  text-decoration: none;
+  padding-bottom: 2px;
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 2px;
+  transition: background-size 0.25s ease;
+}
+.title-link .ext {
+  display: inline-block;
+  margin-left: 0.3em;
+  font-size: 0.78em;
+  vertical-align: 0.08em;
+  color: var(--accent-text);
+  opacity: 0.6;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.title-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; border-radius: 4px; background-size: 100% 2px; }
+.title-link:focus-visible .ext { opacity: 1; }
+@media (hover: hover) {
+  .title-link:hover { background-size: 100% 2px; }
+  .title-link:hover .ext { opacity: 1; }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .title-link:hover .ext { transform: translate(2px, -2px); }
+}
+
 .card p { margin: 0 0 18px; color: var(--muted); font-size: 0.98rem; flex: 1; }
 
 .badge {

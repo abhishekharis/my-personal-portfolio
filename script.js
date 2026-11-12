@@ -25,6 +25,24 @@ function renderHighlight(project) {
   return row;
 }
 
+// Title is plain text, unless the project has a live site: then the name links to it with a quiet ↗.
+function renderTitle(project) {
+  const h3 = el("h3");
+  if (!project.liveUrl) {
+    h3.textContent = project.title;
+    return h3;
+  }
+  const link = el("a", "title-link");
+  link.href = project.liveUrl;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  const arrow = el("span", "ext", "↗");
+  arrow.setAttribute("aria-hidden", "true"); // decorative; the sr-only text says where it goes
+  link.append(project.title, arrow, el("span", "sr-only", " (live site, opens in a new tab)"));
+  h3.appendChild(link);
+  return h3;
+}
+
 function renderProjects(projects, container) {
   container.replaceChildren();
   for (const project of projects) {
@@ -32,7 +50,7 @@ function renderProjects(projects, container) {
     card.dataset.accent = project.accent;
 
     const head = el("div", "card-head");
-    head.appendChild(el("h3", "", project.title));
+    head.appendChild(renderTitle(project));
     if (project.badge) head.appendChild(el("span", "badge", project.badge));
     card.appendChild(head);
     card.appendChild(el("p", "", project.description));
@@ -43,11 +61,11 @@ function renderProjects(projects, container) {
 
     card.appendChild(renderHighlight(project));
 
-    const link = el("a", "card-link", "View project →");
+    const link = el("a", "card-link", "GitHub repo →");
     link.href = project.url;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
-    link.setAttribute("aria-label", `View project: ${project.title}`);
+    link.setAttribute("aria-label", `GitHub repo: ${project.title}`);
     card.appendChild(link);
 
     container.appendChild(card);

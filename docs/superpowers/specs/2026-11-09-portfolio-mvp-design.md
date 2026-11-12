@@ -12,9 +12,9 @@ A stylish, professional single-page portfolio. MVP content: a short professional
 
 ## Links (supplied by owner)
 - GitHub profile: https://github.com/abhishekharis
-- AI EvalOps: https://github.com/abhishekharis/ai-evalops
-- Intelligent Invoice Processing System: https://github.com/abhishekharis/document-ai-rpa
-- FinPilot: https://finpilotus.netlify.app/ (live site; repo is https://github.com/mairesse24/FinPilot)
+- AI EvalOps: repo https://github.com/abhishekharis/ai-evalops · live https://ai-evalops.onrender.com/
+- Intelligent Invoice Processing System: repo https://github.com/abhishekharis/document-ai-rpa · no live site yet
+- FinPilot: repo https://github.com/mairesse24/FinPilot · live https://finpilotus.netlify.app/
 
 ## Assumptions (not explicitly confirmed)
 - FinPilot is not on the resume. Its card content comes from the repo README (see below). The repo is owned by a different GitHub account (`mairesse24`) and the README describes a 3-member HackUTD 2026 team, so the card is labelled a team hackathon project. **Owner to confirm** their role and that this framing is accurate.
@@ -35,7 +35,13 @@ A stylish, professional single-page portfolio. MVP content: a short professional
 | **Intelligent Invoice Processing System** | End-to-end invoice workflow: document upload, OCR, validation, human approval and RPA, with audit logs and job tracking. | React, FastAPI, MongoDB, PaddleOCR, OpenCV | OCR → approval → RPA |
 | **FinPilot** | AI-powered financial resilience platform built for HackUTD 2026 (PNC Financial Health Navigator): detects financial risk, simulates "what if" scenarios, and recommends actions. Uses synthetic data only. | Python, FastAPI, React, LightGBM, Gemini | Detect → Simulate → Recommend |
 
-Each card: title, description, tag chips, highlight metric, "View project" link (opens the GitHub repo in a new tab with `rel="noopener noreferrer"`).
+Each card: title, description, tag chips, highlight metric, and a "GitHub repo →" link (opens the repo in a new tab with `rel="noopener noreferrer"`).
+
+### Card links (decided 2026-11-12, variant "C" of the title-link mock)
+- A project with a live site (`liveUrl`) has its **name** link to it (new tab, `rel="noopener noreferrer"`). A project without one keeps a plain-text name.
+- The linked name shows a quiet **↗** that is always visible (so it works on touch screens). On hover/focus the arrow nudges up-right and an accent-coloured underline draws in. Hover effects apply only on hover-capable devices; the nudge is off under reduced motion.
+- The bottom link is labelled **"GitHub repo →"** (not "View project") so live site vs. code is unambiguous.
+- Accessibility: the arrow is `aria-hidden`; the link carries visually-hidden text " (live site, opens in a new tab)"; the repo link's `aria-label` is "GitHub repo: <title>".
 
 ### FinPilot card — visual design
 Same glass card as the other two, with a distinct identity so the row reads as three projects, not three copies:
