@@ -28,7 +28,7 @@ const PROJECTS = [
       'A prototype AI-powered financial resilience platform built for HackUTD 2026 (PNC Financial Health Navigator): detects financial risk, simulates "what if" scenarios, and recommends actions. Uses synthetic data only.',
     tags: ["Python", "FastAPI", "React", "LightGBM", "Gemini"],
     highlight: "Detect → Simulate → Recommend",
-    url: "https://github.com/mairesse24/FinPilot",
+    url: "https://finpilotus.netlify.app/",
     accent: "emerald",
     badge: "HackUTD 2026",
     flow: ["Detect", "Simulate", "Recommend"],

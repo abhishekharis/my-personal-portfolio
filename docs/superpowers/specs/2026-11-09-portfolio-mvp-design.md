@@ -14,7 +14,7 @@ A stylish, professional single-page portfolio. MVP content: a short professional
 - GitHub profile: https://github.com/abhishekharis
 - AI EvalOps: https://github.com/abhishekharis/ai-evalops
 - Intelligent Invoice Processing System: https://github.com/abhishekharis/document-ai-rpa
-- FinPilot: https://github.com/mairesse24/FinPilot
+- FinPilot: https://finpilotus.netlify.app/ (live site; repo is https://github.com/mairesse24/FinPilot)
 
 ## Assumptions (not explicitly confirmed)
 - FinPilot is not on the resume. Its card content comes from the repo README (see below). The repo is owned by a different GitHub account (`mairesse24`) and the README describes a 3-member HackUTD 2026 team, so the card is labelled a team hackathon project. **Owner to confirm** their role and that this framing is accurate.

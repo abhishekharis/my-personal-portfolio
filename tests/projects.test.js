@@ -15,7 +15,7 @@ test("urls match the spec", () => {
     [
       "https://github.com/abhishekharis/ai-evalops",
       "https://github.com/abhishekharis/document-ai-rpa",
-      "https://github.com/mairesse24/FinPilot",
+      "https://finpilotus.netlify.app/",
     ]
   );
 });
